@@ -1,0 +1,12 @@
+#!/bin/bash
+
+set -o errexit
+set -o pipefail
+set -o nounset
+
+cd /app
+# source $VENV_PATH/activate
+
+# hatch run dev-backend makemigrations
+uv run hatch run dev-backend migrate
+uv run uvicorn config.asgi:application --host 0.0.0.0 --reload --reload-include '*.html'
