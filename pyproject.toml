@@ -243,7 +243,7 @@ packages = ["src/"]
 install = "npm install && npm cache clean --force"
 
 # Development mode
-dev-backend = "uv run --group dev ./manage.py {args}"
+dev-backend = "uv run --group dev ./manage.py {args}" # example: hatch run dev-backend runserver
 dev-frontend = "npm run dev"
 
 # Production mode
