@@ -52,16 +52,19 @@
 workspace = {
   onStart = {
     # 1. Install core Python tools
-    install-pip = "uv pip install pip";
-    install-pipx = "uv pip install pipx";
-    install-hatch = "uv pip install hatch";
+    install-dep = ''
+    uv pip install pip &&
+    uv pip install pipx &&
+    uv pip install hatch'';
 
     # 2. Install project dependencies via Hatch
     install-npm-pkgs = "hatch run install-dev";
 
     # 3. Prepare database models
-    backend-models = "hatch run dev-backend makemigrations";
-    apply-models = "hatch run dev-backend migrate";
+    init-migrations = ''
+    hatch run dev-backend makemigrations &&
+    hatch run dev-backend migrate
+    '';
 
     # 4. Start backend and frontend in parallel
     start-servers = ''
