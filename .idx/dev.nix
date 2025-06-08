@@ -1,7 +1,7 @@
 # Firebase IDX Nix Environment Configuration
 { pkgs, ... }: {
   # Define the Nixpkgs channel
-  channel = "stable-24.11";
+  channel = "stable-24.05";
 
   # Add packages here – search via https://search.nixos.org/packages
   packages = [
@@ -49,17 +49,27 @@
       };
     };
 
-    workspace = {
-      onStart = {
-        install-pip = "uv pip install pip";
-        install-pipx = "uv pip install pipx";
-        install-hatch = "uv pip install hatch";
-        install-npm-pkgs = "hatch run install-dev";
-        backend-models = "hatch run dev-backend makemigrattions";
-        apply-models = "hatch run dev-backend migrate";
-        start-backend = "hatch run dev-backend runserver";
-        start-frontend = "hatch run dev-frontend";
-      };
-    };
+workspace = {
+  onStart = {
+    # 1. Install core Python tools
+    install-pip = "uv pip install pip";
+    install-pipx = "uv pip install pipx";
+    install-hatch = "uv pip install hatch";
+
+    # 2. Install project dependencies via Hatch
+    install-npm-pkgs = "hatch run install-dev";
+
+    # 3. Prepare database models
+    backend-models = "hatch run dev-backend makemigrations";
+    apply-models = "hatch run dev-backend migrate";
+
+    # 4. Start backend and frontend in parallel
+    start-servers = ''
+      hatch run dev-backend runserver &   # Start backend
+      hatch run dev-frontend &            # Start frontend
+      wait                                # Wait for both
+    '';
+  };
+};
   };
 }
