@@ -1,5 +1,5 @@
 # Use uv-enabled Python image
-FROM ghcr.io/astral-sh/uv:0.7.6-python3.12-bookworm AS python
+FROM ghcr.io/astral-sh/uv:0.7.12-python3.12-bookworm AS python
 
 # Python build stage
 FROM python AS python-build-stage
